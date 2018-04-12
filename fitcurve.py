@@ -3,14 +3,6 @@ import matplotlib.pyplot as plt
 from lmfit import Model
 import pywt
 from scipy.optimize import curve_fit
-def gaussian(x, amp, cen, wid):
-    return amp * np.sin(cen*x)*np.exp(-x)
-
-def har(x, a, d, f, p, k, a2, l, l2):
-    return a*np.exp(d*x)*np.cos(f*x + p) + k + a2*np.exp((x-l)**2*l2)
-
-
-#data = np.loadtxt("processed_signal_s15a2o05_ls-plus.txt")
 data = np.loadtxt("processed_signal_s15a2o09_ls-plus.txt")
 data = data[3478:3600]
 #print(data)
@@ -27,21 +19,7 @@ wl2 = pywt.waverec(coffs, w)
 scaling, wavelet, xx = w.wavefun()
 print(len(coffs[0]))
 print(coffs[0])
-# fit = np.polyfit(x,data,40)
-# print(len(data))
-# print(len(x))
-# p = np.poly1d(fit)
 
-
-# gmodel = Model(har)
-# result = gmodel.fit(data, x=x, a=5, d=-1, f=20, p = 0, k = 1e-20,a2=0.1e-20,l=100,l2=-0.1)
-# print(result.fit_report())
-
-#def f_fit(t,w,cof,N):
-#    funs
-#    for l in range(0,N):
-#        for i in range(0,2**l):
-#        funs = funs
 
 print(xx)
 f = plt.figure()
