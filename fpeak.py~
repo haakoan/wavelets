@@ -1,0 +1,54 @@
+import numpy as np
+from matplotlib import pylab as plt
+import itertools
+#import random as rm
+def fpeak(M,R,E):
+    G = 6.67259e-8
+    mn = 1.6749286e-24
+    c = 2.99792458e10
+    return 1/2/np.pi * G*M/R**2 * np.sqrt(1.1*mn/E) * (1 - G*M/R/c**2)**2
+def fpeak2(args):
+    return fpeak(*args)
+
+
+
+msun = 1.99e33
+kcm = 1e5
+mev = 1/(624.15*1000)
+Min = 1.2*msun
+Rin = 100*kcm
+Ein = 10*mev
+dm = np.random.uniform(0.3,0.3,5)*msun
+dr = np.random.uniform(-10,10,5)*kcm
+de = np.random.uniform(-4,4,5)*mev
+Ev = de + Ein
+Mv = dm + Min
+Rv = dr + Rin
+
+t = np.linspace(10,500,400)
+dt = t[1]-t[0]
+inital_conditions = list(itertools.product(*[Mv,Rv,Ev]))
+sj = list(map(fpeak2,inital_conditions))
+
+drdt = (30e-2)*dt*kcm
+dmdt = (0.075e-2)*dt*msun
+dedt = 0.012*dt*mev
+n = 0
+f = plt.figure()
+#plt.ylim(0,2000)
+while(n < 2):
+    gr = np.cumsum(-abs(np.random.normal(drdt, 15*drdt, len(t))))
+    gm = np.cumsum(abs(np.random.normal(dmdt, 15*dmdt, len(t))))
+    ge = np.cumsum(abs(np.random.normal(dedt, 15*dedt, len(t))))
+    print(gm[len(t)-1],gr[len(t)-1],ge[len(t)-1])
+    for x in inital_conditions:
+        vls = np.array((gm + x[0],gr + x[1],ge + x[2])).T
+        #print(vls.shape)
+        fs = list(map(fpeak2,vls))
+        #plt.plot(t,gm+x[0],'r.')
+        plt.plot(t,gr+x[1],'b.')
+        #plt.plot(t,ge+x[2],'k.')
+
+    n = n+1
+
+plt.savefig("spread.png")
